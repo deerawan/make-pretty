@@ -10,6 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "inquirer": "^6.0.0"
+    "edit-json-file": "^1.0.8",
+    "inquirer": "^6.0.0",
+    "npm-install-package": "^2.1.0"
   }
 }
