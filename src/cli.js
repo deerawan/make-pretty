@@ -1,8 +1,15 @@
+const copy = require('copy');
 const inquirer = require('inquirer');
 const npmInstallPackage = require('npm-install-package');
 const editJsonFile = require('edit-json-file');
-let packageFile = editJsonFile(`${__dirname}/package.json`);
+const {promisify} = require("es6-promisify");
 
+const copyEach = promisify(copy.each);
+const templateDir = `${__dirname}/templates`;
+
+const packageJsonPath = `${__dirname}/package.json`;
+console.log('package json found', packageJsonPath);
+let packageFile = editJsonFile(packageJsonPath);
 
 const devDeps = [
   'lint-staged',
@@ -21,20 +28,22 @@ const questions = [
   }
 ];
 
-inquirer.prompt(questions).then(answers => {
-  console.log('\nOrder receipt:');
+inquirer.prompt(questions).then(answers => {  
   console.log(JSON.stringify(answers, null, '  '));
 
+  console.log('install dev dependencies');
   npmInstallPackage(devDeps, {
-    saveDev: true,
-    cache: true
-  }, done);
-
-  modifyPackageFile();
-
+    saveDev: true,    
+  }, function(err) {
+    if (err) {
+      throw err;
+    }
+    modifyPackageFile();
+  });  
 });
 
 function modifyPackageFile() {
+  console.log('modifying package json file');
   const jsonTemplate = {
     "scripts": {
       "precommit": "lint-staged"
@@ -47,4 +56,12 @@ function modifyPackageFile() {
   packageFile.set('lint-staged', jsonTemplate['lint-staged']);
 
   packageFile.save();
+}
+
+function copyPrettierTemplates() {
+  
+  copyEach([
+    `${templateDir}/.prettierignore`,
+    `${templateDir}/.prettierrc`
+  ])
 }

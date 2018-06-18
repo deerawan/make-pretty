@@ -4,14 +4,19 @@
   "description": "",
   "main": "cli.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "copy": "^0.3.2",
     "edit-json-file": "^1.0.8",
+    "es6-promisify": "^6.0.0",
     "inquirer": "^6.0.0",
     "npm-install-package": "^2.1.0"
+  },
+  "devDependencies": {
+    "jest": "^23.1.0"
   }
 }
