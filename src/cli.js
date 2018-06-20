@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const inquirer = require('inquirer');
 const npmInstallPackage = require('npm-install-package');
 const editJsonFile = require('edit-json-file');
@@ -8,13 +10,16 @@ const fs = require('fs');
 const warning = chalk.keyword('orange');
 
 const copy = promisify(cpx.copy);
-const templateDir = `${__dirname}/templates`;
-console.log('templates directory', templateDir);
 
-const currentDir = __dirname;
-const packageJsonPath = `${currentDir}/package.json`;
+const targetDir = process.cwd();
+console.log('target directory', targetDir);
+const packageJsonPath = `${targetDir}/package.json`;
 console.log('package json found', packageJsonPath);
 let packageFile = editJsonFile(packageJsonPath);
+
+const sourceDir = __dirname;
+const templateDir = `${sourceDir}/templates`;
+console.log('templates directory', templateDir);
 
 const requiredDevDeps = [
   'lint-staged',
@@ -78,7 +83,7 @@ function modifyPackageFile() {
 
 function copyPrettierTemplates() {
   console.log('copying prettier files');
-  return copy(`${templateDir}/.*`, currentDir)
+  return copy(`${templateDir}/.*`, targetDir)
   .then(() => {
     console.log('prettier files are copied');
     return Promise.resolve();
@@ -89,7 +94,7 @@ function copyPrettierTemplates() {
 }
 
 function configurePrettierForTypescript() {
-  const tslintFilePath = `${currentDir}/.tslint.json`;
+  const tslintFilePath = `${targetDir}/tslint.json`;
   const tslintStats = fs.statSync(tslintFilePath);
   if (tslintStats.isFile()) {
     console.log(warning('tslint.json is exist, adding tslint-config-prettier to `extends`...'));      

@@ -1,8 +1,10 @@
 package-lock.json
 package.json
-!fixtures/package.json
+tslint.json
 cli.js
 templates
 .prettierrc
 .prettierignore
+
+!fixtures/**/*
 
