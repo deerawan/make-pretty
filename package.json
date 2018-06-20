@@ -7,6 +7,8 @@
     "node-prettier-setup": "src/cli.js"
   },
   "scripts": {
+    "compile": "tsc",
+    "pretest": "npm run compile",
     "test": "jest"
   },
   "keywords": [],
@@ -22,10 +24,19 @@
     "npm-install-package": "^2.1.0"
   },
   "devDependencies": {
+    "@types/cpx": "^1.5.0",
+    "@types/es6-promisify": "^6.0.0",
+    "@types/inquirer": "0.0.42",
+    "@types/jest": "^23.1.1",
+    "@types/node": "^10.3.4",
     "husky": "^0.14.3",
     "inquirer-test": "^2.0.1",
     "jest": "^23.1.0",
     "lint-staged": "^7.2.0",
-    "prettier": "^1.13.5"
+    "prettier": "^1.13.5",
+    "pretty-quick": "^1.6.0",
+    "ts-jest": "^22.4.6",
+    "tslint": "^5.10.0",
+    "typescript": "^2.8.0"
   }
 }

@@ -65,3 +65,7 @@ typings/
 
 # Serverless directories
 .serverless
+
+# Typescript generated files
+*.js
+*.js.map

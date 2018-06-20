@@ -1,14 +1,15 @@
 #!/usr/bin/env node
 
-const inquirer = require('inquirer');
+import * as inquirer from 'inquirer';
+import { promisify } from 'es6-promisify';
+import * as cpx from 'cpx';
+import * as chalk from 'chalk';
+import * as fs from 'fs';
+import { init, ProjectId, Project, getChoices } from './projects';
+
 const npmInstallPackage = require('npm-install-package');
 const editJsonFile = require('edit-json-file');
-const {promisify} = require("es6-promisify");
-const cpx = require('cpx');
-const chalk = require('chalk');
-const fs = require('fs');
-const warning = chalk.keyword('orange');
-
+const warning = chalk.default.keyword('orange');
 const copy = promisify(cpx.copy);
 
 const targetDir = process.cwd();
@@ -27,57 +28,68 @@ const requiredDevDeps = [
   'prettier'
 ];
 
-const questions = [
+enum QuestionName {
+  Project = 'project'
+}
+
+console.log('choices', getChoices());
+
+const questions: inquirer.Questions = [
   {
     type: 'list',
-    name: 'language',
-    message: 'What language is it?',
-    choices: ['Javascript', 'Typescript'],
-    filter(val) {
+    name: QuestionName.Project,
+    message: 'What project is it?',
+    choices: getChoices(),
+    filter(val: string) {
       return val.toLowerCase();
     }
   }
 ];
 
-inquirer.prompt(questions).then(answers => {  
-  console.log(JSON.stringify(answers, null, '  '));
+interface Answer {
+  [QuestionName.Project]: ProjectId;
+}
 
-  if (answers.language === 'typescript') {
+inquirer.prompt(questions).then((answer: Answer) => {
+  console.log(JSON.stringify(answer, null, '  '));
 
-  }
+  const project: Project = init(answer[QuestionName.Project]);
 
   console.log('install dev dependencies');
   return installDevPackages(requiredDevDeps)
-    .then(() => Promise.all([      
+    .then(() => Promise.all([
       copyPrettierTemplates(),
-      modifyPackageFile()
+      modifyPackageFile(project)
     ]))
-    .catch(err => {
+    .catch((err: Error) => {
       throw err;
     })
 });
 
-function modifyPackageFile() {
+function modifyPackageFile(project: Project) {
+  const prettierFiles = project.getPrettierFiles();
+  const baseFormatCommand = `prettier --config ./.prettierrc \"${prettierFiles}\"`;
+
   console.log('modifying package json file');
   const jsonTemplate = {
     "scripts": {
       "precommit": "pretty-quick --staged",
-      "format": "prettier --config ./.prettierrc \"*.{js,json}\" --write",
-      "format:check": "prettier --config ./.prettierrc \"*.{js,json}\" --list-different" 
-    }    
+      "format": `${baseFormatCommand} --write`,
+      "format-check": `${baseFormatCommand} --list-different`
+    }
   };
   packageFile.set('scripts.precommit', jsonTemplate['scripts']['precommit']);
   packageFile.set('scripts.format', jsonTemplate['scripts']['format']);
-  packageFile.set('scripts.format:check', jsonTemplate['scripts']['format:check']);
+  packageFile.set('scripts.format-check', jsonTemplate['scripts']['format-check']);
 
   return new Promise((resolve, reject) => {
-    packageFile.save(err => {
+    packageFile.save((err: Error) => {
       if (err) {
         reject(err);
       }
-      
+
       resolve();
-    });  
+    });
   });
 }
 
@@ -97,13 +109,13 @@ function configurePrettierForTypescript() {
   const tslintFilePath = `${targetDir}/tslint.json`;
   const tslintStats = fs.statSync(tslintFilePath);
   if (tslintStats.isFile()) {
-    console.log(warning('tslint.json is exist, adding tslint-config-prettier to `extends`...'));      
+    console.log(warning('tslint.json is exist, adding tslint-config-prettier to `extends`...'));
     return installDevPackages(['tslint-config-prettier'])
       .then(() => {
         const tslintFile = editJsonFile(tslintFilePath);
         const currentExtends = tslintFile.get('extends');
         const newExtends = [...currentExtends, 'tslint-config-prettier'];
-        tslintFile.set('extends', newExtends);  
+        tslintFile.set('extends', newExtends);
 
         return Promise.resolve();
       })
@@ -112,16 +124,16 @@ function configurePrettierForTypescript() {
   return Promise.resolve();
 }
 
-function installDevPackages(packages) {
-  return new Promise((resolve, reject) => {    
+function installDevPackages(packages: string[]) {
+  return new Promise((resolve, reject) => {
     npmInstallPackage(packages, {
-      saveDev: true,    
-    }, function(err) {
+      saveDev: true,
+    }, function(err: Error) {
       if (err) {
         console.log('woi error');
         reject(err);
       }
       resolve();
-    });  
+    });
   });
 }
