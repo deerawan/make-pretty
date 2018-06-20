@@ -22,7 +22,7 @@ const templateDir = `${sourceDir}/templates`;
 console.log('templates directory', templateDir);
 
 const requiredDevDeps = [
-  'lint-staged',
+  'pretty-quick',
   'husky',
   'prettier'
 ];
@@ -61,14 +61,14 @@ function modifyPackageFile() {
   console.log('modifying package json file');
   const jsonTemplate = {
     "scripts": {
-      "precommit": "lint-staged"
-    },
-    "lint-staged": {
-      "*.{js,json,css,md}": ["prettier --write", "git add"]
-    }
+      "precommit": "pretty-quick --staged",
+      "format": "prettier --config ./.prettierrc \"*.{js,json}\" --write",
+      "format:check": "prettier --config ./.prettierrc \"*.{js,json}\" --list-different" 
+    }    
   };
   packageFile.set('scripts.precommit', jsonTemplate['scripts']['precommit']);
-  packageFile.set('lint-staged', jsonTemplate['lint-staged']);
+  packageFile.set('scripts.format', jsonTemplate['scripts']['format']);
+  packageFile.set('scripts.format:check', jsonTemplate['scripts']['format:check']);
 
   return new Promise((resolve, reject) => {
     packageFile.save(err => {

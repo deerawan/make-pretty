@@ -18,39 +18,47 @@ let file;
 
 function reset() {
   const copyOptions = {};
-  childProcess.execSync("git clean -x -f", {
-    cwd: currentDir,
-    stdio: [0, 1, 2]
-  });
+  cleanFiles();
   return Promise.all([
     copy(`${currentDir}/fixtures/*.json`, currentDir, copyOptions)
   ]);
 }
 
+function cleanFiles() {
+  childProcess.execSync("git clean -x -f", {
+    cwd: currentDir,
+    stdio: [0, 1, 2]
+  });
+  childProcess.execSync('rm -rf node_modules', { cwd: currentDir, stdio: [0, 1, 2] })
+}
+
+afterAll(() => {
+  cleanFiles();
+})
+
 describe("Javascript language is chosen", function() {
   let result;
-  let file;
+  let packageFile;
 
   beforeAll(async () => {
     await reset();
     result = await inquirerTest([cliPath], [inquirerTest.ENTER]);
     console.log(result);
-    file = editJsonFile(`${currentDir}/package.json`);
+    packageFile = editJsonFile(`${currentDir}/package.json`);
   }, timeout);
 
   test("javascript is chosen", () => {
     expect(result).toMatch("javascript");
   });
 
-  test("has lint-staged to run in precommit", () => {
-    expect(file.get("scripts.precommit")).toEqual("lint-staged");
+  test("has pretty-quick to run in precommit", () => {
+    expect(packageFile.get("scripts.precommit")).toEqual("pretty-quick --staged");
   });
 
-  test("has lint-staged configuration", () => {
-    expect(file.get("lint-staged")).toEqual({
-      "*.{js,json,css,md}": ["prettier --write", "git add"]
-    });
-  });
+  test('has format commands', () => {
+    expect(packageFile.get("scripts.format")).toEqual("prettier --config ./.prettierrc \"*.{js,json}\" --write");
+    expect(packageFile.get("scripts.format:check")).toEqual("prettier --config ./.prettierrc \"*.{js,json}\" --list-different");
+  })
 
   test("has prettier configuration files", () => {
     const prettierIgnoreStats = fs.statSync(`${currentDir}/.prettierignore`);
@@ -87,14 +95,8 @@ describe.skip("Typescript language is chosen", function() {
     expect(tslintFile.get("extends")).toEqual("hehe");
   });
 
-  test("has lint-staged to run in precommit", () => {
-    expect(packageFile.get("scripts.precommit")).toEqual("lint-staged");
-  });
-
-  test("has lint-staged configuration", () => {
-    expect(packageFile.get("lint-staged")).toEqual({
-      "*.{js,json,css,md}": ["prettier --write", "git add"]
-    });
+  test("has pretty-quick to run in precommit", () => {
+    expect(packageFile.get("scripts.precommit")).toEqual("pretty-quick --staged");
   });
 
   test("has prettier configuration files", () => {
