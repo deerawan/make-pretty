@@ -2,4 +2,7 @@ package-lock.json
 package.json
 !fixtures/package.json
 cli.js
+templates
+.prettierrc
+.prettierignore
 
