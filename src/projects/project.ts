@@ -7,4 +7,6 @@ export abstract class Project {
   public getPrettierFiles() {
     return this.prettierFiles;
   }
+
+  public abstract runExtra(targetDir: string): Promise<any>;
 }

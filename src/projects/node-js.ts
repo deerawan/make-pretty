@@ -8,4 +8,8 @@ export class NodeJs extends Project {
     super();
     this.prettierFiles = '*.{js,json}';
   }
+
+  public runExtra(targetDir: string) {
+    return Promise.resolve();
+  }
 }

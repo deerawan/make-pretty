@@ -8,6 +8,8 @@
     "quotemark": [true, "single"],
     "no-implicit-dependencies": [true, "dev"],
     "no-var-requires": false,
-    "no-console": false
+    "no-console": false,
+    "object-literal-sort-keys": false,
+    "interface-name": [true, "never-prefix"]
   }
 }

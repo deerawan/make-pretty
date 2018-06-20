@@ -70,7 +70,7 @@ describe('Node JS project', () => {
   });
 });
 
-describe.skip('Typescript language is chosen', () => {
+describe('Node TS', () => {
   let result: any;
   let packageFile: any;
   let tslintFile: any;
@@ -88,16 +88,23 @@ describe.skip('Typescript language is chosen', () => {
     console.log('package files', packageFile);
   }, timeout);
 
-  test('typescript is chosen', () => {
-    expect(result).toMatch('typescript');
+  test('node_ts is chosen', () => {
+    expect(result).toMatch('node_ts');
   });
 
   test('has tslint-config-prettier in tslint.json', () => {
-    expect(tslintFile.get('extends')).toEqual('hehe');
+    expect(tslintFile.get('extends')).toEqual(['tslint:latest', 'tslint-config-prettier']);
   });
 
   test('has pretty-quick to run in precommit', () => {
     expect(packageFile.get('scripts.precommit')).toEqual('pretty-quick --staged');
+  });
+
+  test('has format commands', () => {
+    const baseCommand = 'prettier --config ./.prettierrc "*.{ts,json}"';
+    expect(packageFile.get('scripts.format')).toEqual(`${baseCommand} --write`);
+    expect(packageFile.get('scripts.format-check'))
+    .toEqual(`${baseCommand} --list-different`);
   });
 
   test('has prettier configuration files', () => {
