@@ -1,6 +1,6 @@
 // tslint:disable no-console
 
-import { promisify } from 'es6-promisify';
+import {promisify} from 'es6-promisify';
 import * as cpx from 'cpx';
 import * as fs from 'fs';
 import * as childProcess from 'child_process';
@@ -19,9 +19,7 @@ const cliPath = `${currentDir}/../src/cli.js`;
 
 function reset() {
   cleanFiles();
-  return Promise.all([
-    copy(`${currentDir}/fixtures/*.json`, currentDir),
-  ]);
+  return Promise.all([copy(`${currentDir}/fixtures/*.json`, currentDir)]);
 }
 
 function cleanFiles() {
@@ -29,7 +27,10 @@ function cleanFiles() {
     cwd: currentDir,
     stdio: [0, 1, 2],
   });
-  childProcess.execSync('rm -rf node_modules', { cwd: currentDir, stdio: [0, 1, 2] });
+  childProcess.execSync('rm -rf node_modules', {
+    cwd: currentDir,
+    stdio: [0, 1, 2],
+  });
 }
 
 afterAll(() => {
@@ -52,13 +53,18 @@ describe('Node JS project', () => {
   });
 
   test('has pretty-quick to run in precommit', () => {
-    expect(packageFile.get('scripts.precommit')).toEqual('pretty-quick --staged');
+    expect(packageFile.get('scripts.precommit')).toEqual(
+      'pretty-quick --staged',
+    );
   });
 
   test('has format commands', () => {
-    expect(packageFile.get('scripts.format')).toEqual('prettier --config ./.prettierrc \"*.{js,json}\" --write');
-    expect(packageFile.get('scripts.format-check'))
-    .toEqual('prettier --config ./.prettierrc \"*.{js,json}\" --list-different');
+    expect(packageFile.get('scripts.format')).toEqual(
+      'prettier --config ./.prettierrc "*.{js,json}" --write',
+    );
+    expect(packageFile.get('scripts.format-check')).toEqual(
+      'prettier --config ./.prettierrc "*.{js,json}" --list-different',
+    );
   });
 
   test('has prettier configuration files', () => {
@@ -93,18 +99,24 @@ describe('Node TS', () => {
   });
 
   test('has tslint-config-prettier in tslint.json', () => {
-    expect(tslintFile.get('extends')).toEqual(['tslint:latest', 'tslint-config-prettier']);
+    expect(tslintFile.get('extends')).toEqual([
+      'tslint:latest',
+      'tslint-config-prettier',
+    ]);
   });
 
   test('has pretty-quick to run in precommit', () => {
-    expect(packageFile.get('scripts.precommit')).toEqual('pretty-quick --staged');
+    expect(packageFile.get('scripts.precommit')).toEqual(
+      'pretty-quick --staged',
+    );
   });
 
   test('has format commands', () => {
     const baseCommand = 'prettier --config ./.prettierrc "*.{ts,json}"';
     expect(packageFile.get('scripts.format')).toEqual(`${baseCommand} --write`);
-    expect(packageFile.get('scripts.format-check'))
-    .toEqual(`${baseCommand} --list-different`);
+    expect(packageFile.get('scripts.format-check')).toEqual(
+      `${baseCommand} --list-different`,
+    );
   });
 
   test('has prettier configuration files', () => {

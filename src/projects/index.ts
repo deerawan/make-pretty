@@ -1,7 +1,7 @@
-import { Project } from './project';
-import { NodeJs } from './node-js';
-import { NodeTs } from './node-ts';
-import { ChoiceType } from 'inquirer';
+import {Project} from './project';
+import {NodeJs} from './node-js';
+import {NodeTs} from './node-ts';
+import {ChoiceType} from 'inquirer';
 
 export * from './project';
 export enum ProjectId {

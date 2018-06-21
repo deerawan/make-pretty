@@ -11,8 +11,8 @@
     "pretest": "npm run compile",
     "test": "jest",
     "precommit": "pretty-quick --staged",
-    "format": "prettier --config ./.prettierrc \"*.{ts,json}\" --write",
-    "format-check": "prettier --config ./.prettierrc \"*.{ts,json}\" --list-different"
+    "format": "prettier --config ./.prettierrc \"**/*.{ts,json}\" --write",
+    "format-check": "prettier --config ./.prettierrc \"**/*.{ts,json}\" --list-different"
   },
   "keywords": [],
   "author": "",

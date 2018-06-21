@@ -1,4 +1,4 @@
-import { Project } from './project';
+import {Project} from './project';
 
 export class NodeJs extends Project {
   public static projectId = 'node_js';
@@ -6,7 +6,7 @@ export class NodeJs extends Project {
 
   constructor() {
     super();
-    this.prettierFiles = '*.{js,json}';
+    this.prettierFiles = '**/*.{js,json}';
   }
 
   public runExtra(targetDir: string) {
