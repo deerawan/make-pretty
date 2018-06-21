@@ -23,8 +23,6 @@ export function init(id: ProjectId): Project {
 export function getChoices(): ChoiceType[] {
   const supportedProjects = [NodeJs, NodeTs];
 
-  console.log('hello', NodeJs.projectName);
-
   return supportedProjects.map((project: any) => ({
     name: project.projectName,
     value: project.projectId,
