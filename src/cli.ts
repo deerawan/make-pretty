@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
 import * as inquirer from 'inquirer';
-import { promisify } from 'es6-promisify';
+import {promisify} from 'es6-promisify';
 import * as cpx from 'cpx';
-import { init, ProjectId, Project, getChoices } from './projects';
-import { installDevPackages } from './util';
+import {init, ProjectId, Project, getChoices} from './projects';
+import {installDevPackages} from './util';
 
 const editJsonFile = require('edit-json-file');
 const copy = promisify(cpx.copy);
@@ -19,11 +19,7 @@ const sourceDir = __dirname;
 const templateDir = `${sourceDir}/templates`;
 console.log('templates directory', templateDir);
 
-const requiredDevDeps = [
-  'pretty-quick',
-  'husky',
-  'prettier',
-];
+const requiredDevDeps = ['pretty-quick', 'husky', 'prettier'];
 
 enum QuestionName {
   Project = 'project',
@@ -37,9 +33,6 @@ const questions: inquirer.Questions = [
     name: QuestionName.Project,
     message: 'What project is it?',
     choices: getChoices(),
-    filter(val: string) {
-      return val.toLowerCase();
-    },
   },
 ];
 
@@ -54,11 +47,13 @@ inquirer.prompt(questions).then((answer: Answer) => {
 
   console.log('install dev dependencies');
   return installDevPackages(requiredDevDeps)
-    .then(() => Promise.all([
-      copyPrettierTemplates(),
-      modifyPackageFile(project),
-      project.runExtra(targetDir),
-    ]))
+    .then(() =>
+      Promise.all([
+        copyPrettierTemplates(),
+        modifyPackageFile(project),
+        project.runExtra(targetDir),
+      ]),
+    )
     .catch((err: Error) => {
       throw err;
     });
@@ -71,8 +66,8 @@ function modifyPackageFile(project: Project) {
   console.log('modifying package json file');
   const jsonTemplate = {
     scripts: {
-      'precommit': 'pretty-quick --staged',
-      'format': `${baseFormatCommand} --write`,
+      precommit: 'pretty-quick --staged',
+      format: `${baseFormatCommand} --write`,
       'format-check': `${baseFormatCommand} --list-different`,
     },
   };
@@ -94,11 +89,11 @@ function modifyPackageFile(project: Project) {
 function copyPrettierTemplates() {
   console.log('copying prettier files');
   return copy(`${templateDir}/.*`, targetDir)
-  .then(() => {
-    console.log('prettier files are copied');
-    return Promise.resolve();
-  })
-  .catch((err: Error) => {
-    throw err;
-  });
+    .then(() => {
+      console.log('prettier files are copied');
+      return Promise.resolve();
+    })
+    .catch((err: Error) => {
+      throw err;
+    });
 }

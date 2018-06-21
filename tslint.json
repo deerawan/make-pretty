@@ -1,7 +1,5 @@
 {
-  "extends": [
-    "tslint:latest"
-  ],
+  "extends": ["tslint:latest", "tslint-config-prettier"],
   "rules": {
     "ordered-imports": false,
     "eofline": false,
