@@ -1,10 +1,7 @@
 import {Project} from './project';
 import * as fs from 'fs';
-import * as chalk from 'chalk';
 import {installDevPackages} from '../util';
 const editJsonFile = require('edit-json-file');
-
-const warning = chalk.default.keyword('orange');
 
 export class NodeTs extends Project {
   public static projectId = 'node_ts';

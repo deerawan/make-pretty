@@ -1,10 +1,10 @@
 {
-  "name": "node-prettier-setup",
+  "name": "make-pretty",
   "version": "1.0.0",
-  "description": "",
+  "description": "setup prettier",
   "main": "src/cli.js",
   "bin": {
-    "node-prettier-setup": "src/cli.js"
+    "make-pretty": "src/cli.js"
   },
   "scripts": {
     "compile": "tsc",
@@ -14,12 +14,12 @@
     "format": "prettier --config ./.prettierrc \"**/*.{ts,json}\" --write",
     "format-check": "prettier --config ./.prettierrc \"**/*.{ts,json}\" --list-different"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "prettier"
+  ],
+  "author": "Budi Irawan <deerawan@gmail.com>",
+  "license": "MIT",
   "dependencies": {
-    "chalk": "^2.4.1",
-    "copy": "^0.3.2",
     "cpx": "^1.5.0",
     "edit-json-file": "^1.0.8",
     "es6-promisify": "^6.0.0",
