@@ -10,6 +10,11 @@ It will install required dependencies:
 - [Husky](https://github.com/typicode/husky)
 - [Pretty Quick](https://github.com/azz/pretty-quick)
 
+It will add three scripts commands in `package.json`:
+- `format`
+- `format-check`
+- `precommit`
+
 For `Node TS` project:
 - Setup [tslint-config-prettier](https://github.com/alexjoverm/tslint-config-prettier) if `tslint.json` exist
 
