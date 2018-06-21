@@ -10,22 +10,17 @@ const editJsonFile = require('edit-json-file');
 const copy = promisify(cpx.copy);
 
 const targetDir = process.cwd();
-console.log('target directory', targetDir);
+console.log('🗃️ target directory', targetDir);
 const packageJsonPath = `${targetDir}/package.json`;
-console.log('package json found', packageJsonPath);
 const packageFile = editJsonFile(packageJsonPath);
 
 const sourceDir = __dirname;
 const templateDir = `${sourceDir}/templates`;
-console.log('templates directory', templateDir);
-
 const requiredDevDeps = ['pretty-quick', 'husky', 'prettier'];
 
 enum QuestionName {
   Project = 'project',
 }
-
-console.log('choices', getChoices());
 
 const questions: inquirer.Questions = [
   {
@@ -41,11 +36,9 @@ interface Answer {
 }
 
 inquirer.prompt(questions).then((answer: Answer) => {
-  console.log(JSON.stringify(answer, null, '  '));
-
   const project: Project = init(answer[QuestionName.Project]);
 
-  console.log('install dev dependencies');
+  console.log('📦 installing base dev dependencies');
   return installDevPackages(requiredDevDeps)
     .then(() =>
       Promise.all([
@@ -63,7 +56,7 @@ function modifyPackageFile(project: Project) {
   const prettierFiles = project.getPrettierFiles();
   const baseFormatCommand = `prettier --config ./.prettierrc \"${prettierFiles}\"`;
 
-  console.log('modifying package json file');
+  console.log('📗 adding some script commands in package.json');
   const jsonTemplate = {
     scripts: {
       precommit: 'pretty-quick --staged',
@@ -87,13 +80,7 @@ function modifyPackageFile(project: Project) {
 }
 
 function copyPrettierTemplates() {
-  console.log('copying prettier files');
+  console.log('🏮 generating prettier files');
   return copy(`${templateDir}/.*`, targetDir)
-    .then(() => {
-      console.log('prettier files are copied');
-      return Promise.resolve();
-    })
-    .catch((err: Error) => {
-      throw err;
-    });
+    .then(() => Promise.resolve());
 }

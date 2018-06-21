@@ -21,14 +21,9 @@ export class NodeTs extends Project {
 
   private configurePrettierForTypescript(targetDir: string) {
     const tslintFilePath = `${targetDir}/tslint.json`;
-    console.log('tslint path', tslintFilePath);
     const tslintStats = fs.statSync(tslintFilePath);
     if (tslintStats.isFile()) {
-      console.log(
-        warning(
-          'tslint.json is exist, adding tslint-config-prettier to `extends`...',
-        ),
-      );
+      console.log('🔍 tslint.json exist, adding tslint-config-prettier...');
       return installDevPackages(['tslint-config-prettier']).then(() => {
         const tslintFile = editJsonFile(tslintFilePath);
         const currentExtends = tslintFile.get('extends') || [];

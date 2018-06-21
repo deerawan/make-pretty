@@ -49,7 +49,7 @@ describe('Node JS project', () => {
   }, timeout);
 
   test('node_js is chosen', () => {
-    expect(result).toMatch('node_js');
+    expect(result).toMatch('Node JS');
   });
 
   test('has pretty-quick to run in precommit', () => {
@@ -59,11 +59,12 @@ describe('Node JS project', () => {
   });
 
   test('has format commands', () => {
+    const baseCommand = 'prettier --config ./.prettierrc "**/*.{js,json}"';
     expect(packageFile.get('scripts.format')).toEqual(
-      'prettier --config ./.prettierrc "*.{js,json}" --write',
+      `${baseCommand} --write`,
     );
     expect(packageFile.get('scripts.format-check')).toEqual(
-      'prettier --config ./.prettierrc "*.{js,json}" --list-different',
+      `${baseCommand} --list-different`,
     );
   });
 
@@ -90,12 +91,10 @@ describe('Node TS', () => {
     console.log(result);
     tslintFile = editJsonFile(`${currentDir}/tslint.json`);
     packageFile = editJsonFile(`${currentDir}/package.json`);
-    console.log('tslint files', tslintFile);
-    console.log('package files', packageFile);
   }, timeout);
 
   test('node_ts is chosen', () => {
-    expect(result).toMatch('node_ts');
+    expect(result).toMatch('Node TS');
   });
 
   test('has tslint-config-prettier in tslint.json', () => {
@@ -112,7 +111,7 @@ describe('Node TS', () => {
   });
 
   test('has format commands', () => {
-    const baseCommand = 'prettier --config ./.prettierrc "*.{ts,json}"';
+    const baseCommand = 'prettier --config ./.prettierrc "**/*.{ts,json}"';
     expect(packageFile.get('scripts.format')).toEqual(`${baseCommand} --write`);
     expect(packageFile.get('scripts.format-check')).toEqual(
       `${baseCommand} --list-different`,
