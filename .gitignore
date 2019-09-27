@@ -69,3 +69,5 @@ typings/
 # Typescript generated files
 *.js
 *.js.map
+
+.vscode

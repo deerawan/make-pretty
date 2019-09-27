@@ -16,7 +16,7 @@ const packageFile = editJsonFile(packageJsonPath);
 
 const sourceDir = __dirname;
 const templateDir = `${sourceDir}/templates`;
-const requiredDevDeps = ['pretty-quick', 'husky', 'prettier'];
+const requiredDevDeps = ['lint-staged', 'husky', 'prettier'];
 
 enum QuestionName {
   Project = 'project',
@@ -53,20 +53,13 @@ inquirer.prompt(questions).then((answer: Answer) => {
 });
 
 function modifyPackageFile(project: Project) {
-  const prettierFiles = project.getPrettierFiles();
-  const baseFormatCommand = `prettier --config ./.prettierrc \"${prettierFiles}\"`;
+  const baseFormatCommand = `prettier`;
 
   console.log('📗 adding some script commands in package.json');
-  const jsonTemplate = {
-    scripts: {
-      precommit: 'pretty-quick --staged',
-      format: `${baseFormatCommand} --write`,
-      'format-check': `${baseFormatCommand} --list-different`,
-    },
-  };
-  packageFile.set('scripts.precommit', jsonTemplate.scripts.precommit);
-  packageFile.set('scripts.format', jsonTemplate.scripts.format);
-  packageFile.set('scripts.format-check', jsonTemplate.scripts['format-check']);
+
+  packageFile.set('scripts.precommit', 'lint-staged');
+  packageFile.set('scripts.format', `${baseFormatCommand} --write`);
+  packageFile.set('scripts.format:check', `${baseFormatCommand} --check`);
 
   return new Promise((resolve, reject) => {
     packageFile.save((err: Error) => {
@@ -81,6 +74,5 @@ function modifyPackageFile(project: Project) {
 
 function copyPrettierTemplates() {
   console.log('🏮 generating prettier files');
-  return copy(`${templateDir}/.*`, targetDir)
-    .then(() => Promise.resolve());
+  return copy(`${templateDir}/.*`, targetDir).then(() => Promise.resolve());
 }
