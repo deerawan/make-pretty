@@ -1,9 +1,9 @@
 // tslint:disable no-console
 
-import {promisify} from 'es6-promisify';
+import { promisify } from 'es6-promisify';
 import * as cpx from 'cpx';
 import * as fs from 'fs';
-import {removeFiles} from '../test-helper';
+import { removeFiles } from '../test-helper';
 
 const editJsonFile = require('edit-json-file');
 const inquirerTest = require('inquirer-test');

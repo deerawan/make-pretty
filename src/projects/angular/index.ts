@@ -1,16 +1,16 @@
 import { Project } from '../project';
 import { configureForTslint } from '../prettier';
 
-export class NodeTs extends Project {
-  public static projectId = 'node_ts';
-  public static projectName = 'Node TS';
+export class Angular extends Project {
+  public static projectId = 'angular';
+  public static projectName = 'Angular';
 
   constructor() {
     super();
   }
 
   public runExtra(targetDir: string) {
-    super.copyTemplates(NodeTs.projectName, __dirname, targetDir);
+    super.copyTemplates(Angular.projectName, __dirname, targetDir);
     return configureForTslint(targetDir);
   }
 }

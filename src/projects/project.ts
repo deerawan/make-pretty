@@ -1,16 +1,11 @@
-import {promisify} from 'es6-promisify';
+import { promisify } from 'es6-promisify';
 import * as cpx from 'cpx';
 const copy = promisify(cpx.copy);
 
 export abstract class Project {
   public static projectId: string;
   public static projectName: string;
-  protected prettierFiles: string;
   protected templateFolderName: string = `templates`;
-
-  public getPrettierFiles() {
-    return this.prettierFiles;
-  }
 
   public abstract runExtra(targetDir: string): Promise<any>;
 

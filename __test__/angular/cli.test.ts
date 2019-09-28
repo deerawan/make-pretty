@@ -18,7 +18,7 @@ const cliPath = `${currentDir}/../../src/cli.js`;
 process.chdir(targetDir);
 console.log('target directory', process.cwd());
 
-describe('Node TS project', () => {
+describe('Angular project', () => {
   let result: any;
   let packageFile: any;
 
@@ -26,14 +26,14 @@ describe('Node TS project', () => {
     await prepareTest();
     result = await inquirerTest(
       [cliPath],
-      [inquirerTest.DOWN, inquirerTest.ENTER],
+      [inquirerTest.DOWN, inquirerTest.DOWN, inquirerTest.ENTER],
     );
     console.log('inquirer result', result);
     packageFile = editJsonFile(`${targetDir}/package.json`);
   }, timeout);
 
-  test('node ts is chosen', () => {
-    expect(result).toMatch('Node TS');
+  test('angular is chosen', () => {
+    expect(result).toMatch('Angular');
   });
 
   test('add lint-staged to run in precommit', () => {

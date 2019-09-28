@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
 import * as inquirer from 'inquirer';
-import {promisify} from 'es6-promisify';
+import { promisify } from 'es6-promisify';
 import * as cpx from 'cpx';
-import {init, ProjectId, Project, getChoices} from './projects';
-import {installDevPackages} from './util';
+import { init, ProjectId, Project, getChoices } from './projects';
+import { installDevPackages } from './util';
 
 const editJsonFile = require('edit-json-file');
 const copy = promisify(cpx.copy);
